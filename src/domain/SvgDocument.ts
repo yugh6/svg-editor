@@ -6,10 +6,13 @@ export class SvgDocument {
   private root = new Group('document-root');
   private canvasWidth: number;
   private canvasHeight: number;
+  private viewBox: readonly number[];
+  private readonly presentation = new Map<string, string>();
 
   constructor(width = 800, height = 600) {
     this.canvasWidth = Numeric.positive(width, 'canvas width');
     this.canvasHeight = Numeric.positive(height, 'canvas height');
+    this.viewBox = [0, 0, width, height];
   }
   get width(): number { return this.canvasWidth; }
   get height(): number { return this.canvasHeight; }
@@ -19,12 +22,26 @@ export class SvgDocument {
     Numeric.positive(width, 'canvas width');
     Numeric.positive(height, 'canvas height');
     this.canvasWidth = width;
-    this.canvasHeight = height;
+    this.canvasHeight = height; this.viewBox = [0, 0, width, height];
   }
   clone(): SvgDocument {
     const copy = new SvgDocument(this.width, this.height);
     copy.root = this.root.clone().asGroup();
+    copy.viewBox = [...this.viewBox];
+    for (const [key, value] of this.presentation) copy.presentation.set(key, value);
     return copy;
+  }
+  setViewBox(values: readonly number[]): void {
+    if (values.length !== 4) throw new Error('viewBox requires four numbers');
+    values.forEach(value => Numeric.finite(value, 'viewBox'));
+    Numeric.positive(values[2]!, 'viewBox width');
+    Numeric.positive(values[3]!, 'viewBox height');
+    this.viewBox = [...values];
+  }
+  importPresentation(key: string, value: string): void { this.presentation.set(key, value); }
+  canvasAttributes(): [string, string][] {
+    return [['width', String(this.width)], ['height', String(this.height)],
+      ['viewBox', this.viewBox.join(' ')], ...this.presentation];
   }
   all(): Shape[] {
     const result: Shape[] = [];
