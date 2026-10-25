@@ -1,0 +1,39 @@
+@startuml
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName SansSerif
+skinparam ArrowColor #546E7A
+skinparam componentBackgroundColor #EDF4FF
+skinparam componentBorderColor #4371A3
+title Lab1 SVG Editor - dependency direction
+
+component "main.ts\nDependency composition" as Main
+component "cli/\nTokenizer, Registry, Runner, REPL" as CLI
+component "commands/\nCommand + EditCommand\nConcrete command classes" as Commands
+component "application/\nEditor, Undoable\nDocumentStore port" as Application
+component "domain/\nSvgDocument, Shape\nLeafShape, Group, Geometry\nShapeFactory" as Domain
+component "io/\nNodeSvgStore, SvgCodec\nSvgTransform" as IO
+component "Node file system\nXML DOM library" as External
+
+Main --> CLI
+Main --> Application
+Main --> IO
+CLI --> Commands
+CLI --> Application
+Commands --> Application
+Commands --> Domain
+Application --> Domain
+IO --> Application : implements ports
+IO --> Domain
+IO --> External
+note bottom of Domain
+  No CLI, file-system or XML dependency.
+  Group and leaves share Shape operations.
+end note
+note bottom of Commands
+  Editing is transactional.
+  Each command owns before/after mementos.
+end note
+@enduml
