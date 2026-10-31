@@ -3,7 +3,7 @@
 Git 仓库地址：[https://github.com/yugh6/svg-editor](https://github.com/yugh6/svg-editor)
 
 
-本工程实现 `phase_cli_1.md` 第一阶段：TypeScript 面向对象 CLI、六种图形、树结构编辑、SVG 文件读写与撤销重做。`box` 属后续插件化阶段，第一阶段创建该类型时按要求报错。
+本工程实现 `phase_cli_1.md` 的要求：TypeScript 面向对象 CLI、六种图形、树结构编辑、SVG 文件读写与撤销重做。`box` 属后续插件化阶段，第一阶段创建该类型时按要求报错。
 
 ## 运行
 
@@ -249,4 +249,3 @@ npm run check
 - [session.cli](../examples/session.cli) → [实际运行记录](../examples/session.transcript.txt)：包含要求中的分组错误、保存后禁撤销和外部 SVG 导入警告。
 - [other.svg](../examples/other.svg) → [other-roundtrip.svg](../examples/other-roundtrip.svg)：无 ID 的矩形被命名为 rect1，七个元素完整保存。
 
-可用 `git log --oneline --reverse` 检查开发过程，用 `git show final` 定位最终版本。作业文档没有给出具体截止日期，因此不对“早于截止时间”作无法验证的声明；标签本身记录实际完成时间。
